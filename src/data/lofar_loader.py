@@ -1,5 +1,3 @@
-import sys
-sys.path.insert(0, '/kaggle/working/RFI-NLN')
 from utils.data import get_lofar_data
 
 
@@ -9,7 +7,7 @@ class Args:
         self.anomaly_class = 1
         self.latent_dim = 32
         self.data = 'LOFAR'
-        self.data_path = None  # da impostare esternamente
+        self.data_path = None
         self.seed = 42
         self.patches = True
         self.patch_x = 32
