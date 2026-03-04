@@ -51,3 +51,41 @@ def plot_detection_result(
         plt.close()
     else:
         plt.show()
+        
+        
+def plot_rfi_distribution(
+    data: np.ndarray,
+    masks: np.ndarray,
+    title: str = None,
+    save_path: str = None
+) -> None:
+    """
+    Plots the intensity distribution of RFI vs clean pixels.
+
+    Args:
+        data: Array of patches of any shape.
+        masks: Boolean array, same shape as data.
+        title: Optional title for the figure.
+        save_path: If provided, saves the figure instead of showing it.
+    """
+    masks = masks.astype(bool)
+    clean = data[~masks].flatten()
+    rfi = data[masks].flatten()
+
+    plt.figure(figsize=(8, 4))
+    plt.hist(clean, bins=100, density=True, color='blue', alpha=0.5, label='Clean')
+    plt.hist(rfi, bins=100, density=True, color='red', alpha=0.5, label='RFI')
+    plt.xlabel('Intensity')
+    plt.ylabel('Density')
+    plt.legend()
+
+    if title:
+        plt.title(title)
+
+    plt.tight_layout()
+
+    if save_path:
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        plt.close()
+    else:
+        plt.show()
