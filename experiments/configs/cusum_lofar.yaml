@@ -1,0 +1,18 @@
+# Dataset
+dataset: lofar
+data_path: /kaggle/input/lofar-full-rfi-dataset-pkl/
+
+# Data loading
+max_samples: 500
+
+# Parameters
+k: 0.46
+h: 1.1
+
+# Preprocessing
+clip_min: 1.0e-7
+clip_max: 32597745.5
+
+# Output
+results_path: experiments/results/cusum_lofar.csv
+plot_path: experiments/results/cusum_lofar_sample.png

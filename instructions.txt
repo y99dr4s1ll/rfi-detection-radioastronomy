@@ -21,3 +21,4 @@ git push
 - inserire feature extraction
 - inserire metodi simple, knn, rf, unet, rnet
 - inserire gridsearch
+- valurare se valori di clipping dinamici da percentili o altro, per ora statici
