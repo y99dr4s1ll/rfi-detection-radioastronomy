@@ -48,6 +48,7 @@ truth_np = truth.to_numpy().astype(bool)
 print('Preprocessing...')
 data_np = polynomial_detrend(data_np, degree=2)
 data_np = np.clip(data_np, -10, 10)
+data_np = process(data_np[..., np.newaxis], per_image=False)[..., 0]
 
 _, _, test_data, test_masks = extract_and_split_patches(
     data_np, truth_np,
