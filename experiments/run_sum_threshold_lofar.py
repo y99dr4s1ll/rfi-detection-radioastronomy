@@ -30,7 +30,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='experiments/configs/sum_threshold_lofar.yaml')
 parser.add_argument('--iterations', type=int, default=None)
 parser.add_argument('--molt', type=float, default=None)
+parser.add_argument('--rfinln_path', type=str, default='../RFI-NLN')
+parser.add_argument('--data_path', type=str, default=None)
 args_cli = parser.parse_args()
+
+sys.path.insert(0, args_cli.rfinln_path)
+from utils.data import get_lofar_data
+from utils.data.processor import process
 
 with open(args_cli.config) as f:
     cfg = yaml.safe_load(f)
@@ -39,6 +45,8 @@ if args_cli.iterations is not None:
     cfg['iterations'] = args_cli.iterations
 if args_cli.molt is not None:
     cfg['molt'] = args_cli.molt
+if args_cli.data_path is not None:
+    cfg['data_path'] = args_cli.data_path
 
 # --- LOAD ---
 print('Loading LOFAR data...')
