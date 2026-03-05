@@ -3,6 +3,7 @@ import os
 import sys
 import yaml
 import argparse
+import faiss
 
 # Third party
 import numpy as np
