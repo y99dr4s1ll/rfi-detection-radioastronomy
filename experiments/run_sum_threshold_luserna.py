@@ -21,6 +21,11 @@ from evaluation.metrics import compute_metrics
 from evaluation.timing import Timer
 from visualization.plots import plot_detection_result, plot_rfi_distribution
 
+# RFI-NLN
+sys.path.insert(0, '/kaggle/working/RFI-NLN')
+from utils.data import get_lofar_data
+from utils.data.processor import process
+
 # --- CONFIG ---
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='experiments/configs/sum_threshold_luserna.yaml')
