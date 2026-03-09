@@ -1,0 +1,41 @@
+# Dataset
+dataset: luserna
+name: PG01
+data_path: data/raw/luserna
+truth_path: data/raw/luserna
+
+# Method
+method: knn
+
+# KNN parameters
+n_neighbors: 100
+weights: distance
+p: 2
+leaf_size: 100
+algorithm: auto
+
+# Feature extraction
+patch_size: 8
+k_cusum: 0.21
+
+# Preprocessing
+patch_size_512: [512, 512]
+train_size: 492
+max_patches: 612
+random_seed: 42
+
+# Undersampling
+undersampling_ratio: 5
+
+# Evaluation
+img_size: 512
+batch_size: 120
+n_thresholds: 18
+
+# Features cache
+features_train_path: experiments/results/features_knn_luserna_train.csv
+features_test_path: experiments/results/features_knn_luserna_test.csv
+
+# Output
+results_path: experiments/results/knn_luserna.csv
+plot_path: experiments/results/knn_luserna_sample.png
