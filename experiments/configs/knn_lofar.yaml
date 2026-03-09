@@ -1,0 +1,38 @@
+# Dataset
+dataset: lofar
+data_path: data/raw/lofar
+
+# Method
+method: knn
+
+# KNN parameters
+n_neighbors: 100
+weights: distance
+p: 2
+leaf_size: 100
+algorithm: auto
+
+# Feature extraction
+patch_size: 8
+k_cusum: 0.21
+
+# Preprocessing
+max_samples: 500
+clip_min: 1.0e-7
+clip_max: 32597745.5
+
+# Undersampling
+undersampling_ratio: 5
+
+# Evaluation
+img_size: 512
+batch_size: 500
+n_thresholds: 18
+
+# Features cache
+features_train_path: experiments/results/features_knn_lofar_train.csv
+features_test_path: experiments/results/features_knn_lofar_test.csv
+
+# Output
+results_path: experiments/results/knn_lofar.csv
+plot_path: experiments/results/knn_lofar_sample.png

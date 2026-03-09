@@ -1,0 +1,42 @@
+# Dataset
+dataset: luserna
+name: PG01
+data_path: data/raw/luserna
+truth_path: data/raw/luserna
+
+# Method
+method: rf
+
+# RF parameters
+n_estimators: 100
+max_depth: null
+min_samples_split: 2
+min_samples_leaf: 1
+max_features: null
+bootstrap: true
+
+# Feature extraction
+patch_size: 8
+k_cusum: 0.21
+
+# Preprocessing
+patch_size_512: [512, 512]
+train_size: 492
+max_patches: 612
+random_seed: 42
+
+# Undersampling
+undersampling_ratio: 5
+
+# Evaluation
+img_size: 512
+batch_size: 120
+n_thresholds: 18
+
+# Features cache
+features_train_path: experiments/results/features_rf_luserna_train.csv
+features_test_path: experiments/results/features_rf_luserna_test.csv
+
+# Output
+results_path: experiments/results/rf_luserna.csv
+plot_path: experiments/results/rf_luserna_sample.png

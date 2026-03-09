@@ -33,6 +33,7 @@ from methods.ml.features import prepare_features, create_features_dataframe, rec
 from evaluation.metrics import compute_metrics, custom_f1_score_ml
 from evaluation.timing import Timer
 from visualization.plots import plot_detection_result, plot_rfi_distribution
+from loaders.lofar_loader import Args
 
 # --- CONFIG ---
 with open(args_cli.config) as f:
@@ -49,30 +50,56 @@ IMG_SIZE = cfg['img_size']
 BATCH_SIZE = cfg['batch_size']
 RANDOM_SEED = cfg['random_seed']
 
-# --- LOAD ---
-print('Loading data...')
-data = load_luserna(cfg['name'], path=cfg['data_path'], powers=False)
-truth = load_luserna_truth(path=cfg['truth_path'])
+# --- LOAD & PREPROCESSING ---
+DATASET = cfg['dataset']
 
-data_np = data.to_numpy().astype(np.float32)
-truth_np = truth.to_numpy().astype(bool)
+if DATASET == 'luserna':
+    print('Loading Luserna data...')
+    data = load_luserna(cfg['name'], path=cfg['data_path'], powers=False)
+    truth = load_luserna_truth(path=cfg['truth_path'])
 
-# --- PREPROCESSING 512x512 ---
-print('Preprocessing...')
-data_np = polynomial_detrend(data_np, degree=2)
-data_np = np.clip(data_np, -10, 10)
-data_np = process(data_np[..., np.newaxis], per_image=False)[..., 0]
+    data_np = data.to_numpy().astype(np.float32)
+    truth_np = truth.to_numpy().astype(bool)
 
-train_data, train_masks, test_data, test_masks = extract_and_split_patches(
-    data_np, truth_np,
-    patch_size=tuple(cfg['patch_size_512']),
-    train_size=cfg['train_size'],
-    max_patches=cfg['max_patches'],
-    random_seed=RANDOM_SEED
-)
+    print('Preprocessing...')
+    data_np = polynomial_detrend(data_np, degree=2)
+    data_np = np.clip(data_np, -10, 10)
+    data_np = process(data_np[..., np.newaxis], per_image=False)[..., 0]
 
-plot_rfi_distribution(train_data, train_masks, title=f'{cfg["dataset"].upper()} - RFI vs Clean')
+    train_data, train_masks, test_data, test_masks = extract_and_split_patches(
+        data_np, truth_np,
+        patch_size=tuple(cfg['patch_size_512']),
+        train_size=cfg['train_size'],
+        max_patches=cfg['max_patches'],
+        random_seed=RANDOM_SEED
+    )
 
+elif DATASET == 'lofar':
+    from loaders.lofar_loader import Args
+    from utils.data import get_lofar_data
+
+    print('Loading LOFAR data...')
+    args = Args()
+    args.data_path = cfg['data_path']
+    args.update_input_shape()
+
+    train_data, train_masks, test_data, test_masks = get_lofar_data(args)
+
+    train_data = train_data[:cfg['max_samples'], ...]
+    train_masks = train_masks[:cfg['max_samples'], ...]
+    test_data = test_data[:cfg['max_samples'], ...]
+    test_masks = test_masks[:cfg['max_samples'], ...]
+
+    print('Preprocessing...')
+    train_data = np.clip(train_data, cfg['clip_min'], cfg['clip_max'])
+    train_data = process(train_data, per_image=False)
+    test_data = np.clip(test_data, cfg['clip_min'], cfg['clip_max'])
+    test_data = process(test_data, per_image=False)
+
+else:
+    raise ValueError(f'Unknown dataset: {DATASET}')
+
+plot_rfi_distribution(train_data, train_masks, title=f'{DATASET.upper()} - RFI vs Clean')
 # --- BALANCE 512x512 ---
 train_data_red, train_masks_red = balance_dataset(train_data, train_masks, random_seed=RANDOM_SEED)
 
