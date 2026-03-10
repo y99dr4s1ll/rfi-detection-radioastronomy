@@ -8,10 +8,10 @@ truth_path: data/raw/luserna
 method: rnet
 
 # Model parameters
-dropout: 0.05
+dropout: 0.1
 
 # Training
-epochs: 500
+epochs: 30
 batch_size: 1024
 learning_rate: 1.0e-4
 buffer_size: 64
