@@ -22,13 +22,14 @@ import pandas as pd
 from sklearn.metrics import precision_recall_curve, roc_curve, auc
 
 # RFI-NLN
-from utils.data import patches, get_patches_batched, get_lofar_data
+from utils.data import patches, get_patches, get_lofar_data
 from utils.data.processor import process
 
 # Project
 from loaders.luserna_loader import load_luserna, load_luserna_truth
 from loaders.lofar_loader import Args
 from preprocessing.spectrogram import polynomial_detrend, extract_and_split_patches, balance_dataset
+from preprocessing.spectrogram import get_patches_batched
 from methods.dl.unet import build_unet, train_unet
 from evaluation.timing import Timer
 from visualization.plots import plot_detection_result, plot_rfi_distribution
