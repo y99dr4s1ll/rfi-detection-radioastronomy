@@ -83,3 +83,26 @@ def balance_dataset(
     shuffle_idx = rng.permutation(len(selected_idx))
 
     return data[selected_idx[shuffle_idx]], masks[selected_idx[shuffle_idx]]
+    
+def get_patches_batched(data: np.ndarray, p_size: tuple, s_size: tuple, rate: tuple, padding: str = 'VALID', batch_size: int = 50) -> np.ndarray:
+    """
+    Applies get_patches in batches to avoid GPU memory overflow.
+
+    Args:
+        data: Array of shape (n, h, w, 1).
+        p_size: Patch size tuple.
+        s_size: Stride size tuple.
+        rate: Dilation rate tuple.
+        padding: Padding mode. Default is 'VALID'.
+        batch_size: Number of images per batch. Default is 50.
+
+    Returns:
+        np.ndarray: Concatenated patches.
+    """
+    from utils.data import get_patches
+    results = []
+    for i in range(0, len(data), batch_size):
+        batch = data[i:i + batch_size]
+        patches = get_patches(batch, None, p_size, s_size, rate, padding)
+        results.append(patches)
+    return np.concatenate(results, axis=0)

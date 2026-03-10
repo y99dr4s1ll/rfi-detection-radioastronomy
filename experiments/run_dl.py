@@ -75,10 +75,10 @@ if DATASET == 'luserna':
     s_size = (1, *cfg['patch_size'], 1)
     rate = (1, 1, 1, 1)
 
-    train_data = get_patches(train_data, None, p_size, s_size, rate, 'VALID')
-    train_masks = get_patches(train_masks.astype('float32'), None, p_size, s_size, rate, 'VALID')
-    test_data_p = get_patches(test_data, None, p_size, s_size, rate, 'VALID')
-    test_masks_p = get_patches(test_masks.astype('float32'), None, p_size, s_size, rate, 'VALID')
+    train_data = get_patches_batched(train_data, None, p_size, s_size, rate, 'VALID')
+    train_masks = get_patches_batched(train_masks.astype('float32'), None, p_size, s_size, rate, 'VALID')
+    test_data_p = get_patches_batched(test_data, None, p_size, s_size, rate, 'VALID')
+    test_masks_p = get_patches_batched(test_masks.astype('float32'), None, p_size, s_size, rate, 'VALID')
 
 elif DATASET == 'lofar':
     print('Loading LOFAR data...')
