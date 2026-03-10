@@ -99,7 +99,17 @@ elif DATASET == 'lofar':
     test_data_p = np.clip(test_data_p, cfg['clip_min'], cfg['clip_max'])
     test_data_p = process(test_data_p, per_image=False)
 
-    test_data = test_data_p  # per il plot finale
+    test_data = test_data_p
+
+    # Patching 32x32
+    p_size = (1, *cfg['patch_size'], 1)
+    s_size = (1, *cfg['patch_size'], 1)
+    rate = (1, 1, 1, 1)
+
+    train_data = get_patches(train_data, None, p_size, s_size, rate, 'VALID')
+    train_masks = get_patches(train_masks.astype('float32'), None, p_size, s_size, rate, 'VALID')
+    test_data_p = get_patches(test_data_p, None, p_size, s_size, rate, 'VALID')
+    test_masks_p = get_patches(test_masks_p.astype('float32'), None, p_size, s_size, rate, 'VALID')
 
 else:
     raise ValueError(f'Unknown dataset: {DATASET}')
