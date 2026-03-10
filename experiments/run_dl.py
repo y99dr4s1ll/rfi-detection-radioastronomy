@@ -22,7 +22,7 @@ import pandas as pd
 from sklearn.metrics import precision_recall_curve, roc_curve, auc
 
 # RFI-NLN
-from utils.data import patches, get_patches, get_lofar_data
+from utils.data import patches, get_patches_batched, get_lofar_data
 from utils.data.processor import process
 
 # Project
