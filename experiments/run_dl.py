@@ -126,25 +126,62 @@ args.patch_y = cfg['patch_size'][1] if isinstance(cfg['patch_size'], list) else 
 args.update_input_shape()
 
 # --- BUILD MODEL ---
-model = build_unet(
-    args=args,
-    n_filters=cfg['n_filters'],
-    dropout=cfg['dropout'],
-    batchnorm=cfg['batchnorm']
-)
-
-# --- TRAIN ---
-print(f'Training {METHOD.upper()} for {cfg["epochs"]} epochs...')
-with Timer() as t_train:
-    model = train_unet(
-        model=model,
-        train_data=train_data,
-        train_masks=train_masks,
-        epochs=cfg['epochs'],
-        batch_size=cfg['batch_size'],
-        learning_rate=cfg['learning_rate'],
-        buffer_size=cfg['buffer_size']
+if METHOD == 'unet':
+    from methods.dl.unet import build_unet, train_unet
+    model = build_unet(
+        args=args,
+        n_filters=cfg.get('n_filters', 16),
+        dropout=cfg.get('dropout', 0.05),
+        batchnorm=cfg.get('batchnorm', True)
     )
+    with Timer() as t_train:
+        model = train_unet(
+            model=model,
+            train_data=train_data,
+            train_masks=train_masks,
+            epochs=cfg['epochs'],
+            batch_size=cfg['batch_size'],
+            learning_rate=cfg['learning_rate'],
+            buffer_size=cfg['buffer_size']
+        )
+
+elif METHOD == 'rnet':
+    from methods.dl.rnet import build_rnet, train_rnet
+    model = build_rnet(
+        args=args,
+        dropout=cfg.get('dropout', 0.05)
+    )
+    with Timer() as t_train:
+        model = train_rnet(
+            model=model,
+            train_data=train_data,
+            train_masks=train_masks,
+            epochs=cfg['epochs'],
+            batch_size=cfg['batch_size'],
+            learning_rate=cfg['learning_rate'],
+            buffer_size=cfg['buffer_size']
+        )
+
+elif METHOD == 'rnet_moran':
+    from methods.dl.rnet_moran import build_rnet_moran, train_rnet_moran
+    model = build_rnet_moran(
+        args=args,
+        dropout=cfg.get('dropout', 0.05),
+        w_size=cfg.get('w_size', 5)
+    )
+    with Timer() as t_train:
+        model = train_rnet_moran(
+            model=model,
+            train_data=train_data,
+            train_masks=train_masks,
+            epochs=cfg['epochs'],
+            batch_size=cfg['batch_size'],
+            learning_rate=cfg['learning_rate'],
+            buffer_size=cfg['buffer_size']
+        )
+
+else:
+    raise ValueError(f'Unknown method: {METHOD}')
 
 print(f'Training time: {t_train}')
 
@@ -196,9 +233,8 @@ metrics = {
     'method': METHOD,
     'dataset': DATASET,
     'epochs': cfg['epochs'],
-    'n_filters': cfg['n_filters'],
     'learning_rate': cfg['learning_rate'],
-    'dropout': cfg['dropout'],
+    'dropout': cfg.get('dropout', 0.05),
     'batch_size': cfg['batch_size'],
     'auroc': auroc,
     'auprc': auprc,
@@ -223,43 +259,3 @@ plot_detection_result(
     title=f'{METHOD.upper()} {DATASET.upper()} — threshold={optimal_threshold:.2f}',
     save_path=cfg['plot_path']
 )
-
-# --- BUILD MODEL ---
-if METHOD == 'unet':
-    from methods.dl.unet import build_unet, train_unet
-    model = build_unet(
-        args=args,
-        n_filters=cfg['n_filters'],
-        dropout=cfg['dropout'],
-        batchnorm=cfg['batchnorm']
-    )
-    with Timer() as t_train:
-        model = train_unet(
-            model=model,
-            train_data=train_data,
-            train_masks=train_masks,
-            epochs=cfg['epochs'],
-            batch_size=cfg['batch_size'],
-            learning_rate=cfg['learning_rate'],
-            buffer_size=cfg['buffer_size']
-        )
-
-elif METHOD == 'rnet':
-    from methods.dl.rnet import build_rnet, train_rnet
-    model = build_rnet(
-        args=args,
-        dropout=cfg['dropout']
-    )
-    with Timer() as t_train:
-        model = train_rnet(
-            model=model,
-            train_data=train_data,
-            train_masks=train_masks,
-            epochs=cfg['epochs'],
-            batch_size=cfg['batch_size'],
-            learning_rate=cfg['learning_rate'],
-            buffer_size=cfg['buffer_size']
-        )
-
-else:
-    raise ValueError(f'Unknown method: {METHOD}')
