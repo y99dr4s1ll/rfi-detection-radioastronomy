@@ -18,6 +18,8 @@ learning_rate: 1.0e-4
 buffer_size: 64
 
 # Preprocessing
+patch_size: [64, 64]
+random_seed: 42
 max_samples: 500
 clip_min: 1.0e-7
 clip_max: 32597745.5
