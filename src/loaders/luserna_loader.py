@@ -3,7 +3,7 @@ import numpy as np
 import warnings
 import os
 
-warnings.simplefilter('ignore', np.RankWarning)
+warnings.simplefilter('ignore', np.exceptions.RankWarning)
 
 
 def load_luserna(name: str, path: str, powers: bool = False) -> pd.DataFrame:
