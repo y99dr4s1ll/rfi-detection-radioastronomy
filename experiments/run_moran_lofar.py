@@ -59,7 +59,7 @@ pred_masks = np.zeros(test_masks.shape, dtype=bool)
 
 with Timer() as t:
     for v in range(test_data.shape[0]):
-        pred_masks[v, ..., 0] = LOCAL_MORAN(test_data[v, ..., 0], kernel=KERNEL, size=SIZE, h=H, output=True))
+        pred_masks[v, ..., 0] = LOCAL_MORAN(test_data[v, ..., 0], kernel=KERNEL, size=SIZE, h=H, output=True)
 
 print(f'Inference time: {t}')
 
