@@ -1,0 +1,19 @@
+# Dataset# Dataset
+dataset: lofar
+data_path: data/raw/lofar
+
+# Data loading
+max_samples: 500
+
+# Parameters
+kernel: queen
+size: 3
+h: 1
+
+# Preprocessing
+clip_min: 1.0e-7
+clip_max: 32597745.5
+
+# Output
+results_path: experiments/results/moran_lofar.csv
+plot_path: experiments/results/moran_lofar_sample.png
