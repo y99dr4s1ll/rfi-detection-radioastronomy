@@ -72,6 +72,6 @@ plot_detection_result(
     spectrogram=test_data[sample_idx],
     ground_truth=test_masks[sample_idx],
     predicted_mask=pred_masks[sample_idx],
-    title=f'CUSUM LOFAR — k={K}, h={H}',
+    title=f'CUSUM LOFAR — k={KERNEL}, h={H}',
     save_path=cfg['plot_path']
 )
